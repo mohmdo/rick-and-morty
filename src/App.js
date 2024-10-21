@@ -8,13 +8,14 @@ const App = () => {
   const [char , setchar] = useState([]);
   const [selectId , setSelectId] = useState("");
   const [select , setSelect] = useState(null);
+  const [heart , setHeart] = useState([]);
   // console.log(selectId)
   return (
     <>
-      <Header char={char} setchar={setchar} />
+      <Header char={char} setchar={setchar} heart={heart} />
       <Char>
         <CharList char={char} setchar={setchar} selectId={selectId} setSelectId={setSelectId} />
-        <CharOne selectId={selectId} select={select} setSelect={setSelect} />
+        <CharOne selectId={selectId} select={select} setSelect={setSelect} heart={heart} setHeart={setHeart} />
       </Char>
     </>
   );

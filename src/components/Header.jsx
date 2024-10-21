@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const Header = ({char , setchar}) => {
+const Header = ({char , setchar , heart}) => {
   const [serach , setSearch] = useState("");
 
   const handleSearch = (e) =>{
@@ -17,7 +17,7 @@ const Header = ({char , setchar}) => {
 
   },[serach]);
 
-  
+  // console.log(heart)
 
   return (
     <header className="header d-flex justify-content-between align-items-center p-3">
@@ -34,7 +34,7 @@ const Header = ({char , setchar}) => {
           style={{fontSize:'1.8rem'}}
         ></i>
         <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-          3
+          {heart.length}
         </span>
       </div>
     </header>

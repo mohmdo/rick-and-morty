@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const CharOne = ({ selectId , select , setSelect }) => {
-  
+const CharOne = ({ selectId, select, setSelect, heart, setHeart }) => {
+  const [episode, setEpisode] = useState([]);
 
   useEffect(() => {
     async function fetchSelect() {
@@ -10,17 +10,34 @@ const CharOne = ({ selectId , select , setSelect }) => {
         `https://rickandmortyapi.com/api/character/${selectId}`
       );
       setSelect(data);
-      // console.log(data)
 
+      const episod = data.episode.map((p) => p.split("/").at(-1));
+      // console.log(episod);
+      const { data: AllEpisode } = await axios.get(
+        `https://rickandmortyapi.com/api/episode/${episod}`
+      );
+      setEpisode([AllEpisode].flat().slice(0, 4));
+      // console.log();
     }
     if (selectId) fetchSelect();
   }, [selectId]);
 
-  if(!select || !selectId){
-    return(
-      <p>Select One Character Please!</p>
-    )
+  const handleHeart = (select) => {
+    setHeart((prevHeart) => [...prevHeart, select]);
+  };
+
+  if (!select || !selectId) {
+    return (
+      <div className="col-md-8 character-details p-3">
+        <div className="row align-items-center">
+          <p>Select One Character Please!</p>
+        </div>
+      </div>
+    );
   }
+const isAddToFavourite = heart.map(h=> h.id).includes(selectId);
+  console.log(isAddToFavourite);
+
   return (
     <div className="col-md-8 character-details p-3">
       <div className="row align-items-center">
@@ -35,30 +52,35 @@ const CharOne = ({ selectId , select , setSelect }) => {
           <div className="detail-card p-4">
             <h5>{select.name}</h5>
             {select.status === "Alive" ? (
-                <p>🟢 Alive - {select.gender}</p>
-              ) : (
-                <p>🔴 Dead - {select.gender}</p>
-              )}
+              <p>🟢 Alive - {select.gender}</p>
+            ) : (
+              <p>🔴 Dead - {select.gender}</p>
+            )}
             <p className="colorkam">
               Last known location: <br />{" "}
               <strong style={{ color: "#fff" }}>{select.location.name}</strong>
             </p>
-            <button className="buttonman btn btn-outline-secondary">
-              Add to Favourite
-            </button>
+            {isAddToFavourite ? (
+              <p>Already Added To Favourites ✅</p>
+            ) : (
+              <button
+                onClick={() => handleHeart(select)}
+                className="buttonman btn btn-outline-secondary"
+              >
+                Add to Favourite
+              </button>
+            )}
           </div>
-          
+
           <div className="episode-list mt-4">
             <h5>List of Episodes:</h5>
             <ul className="list-unstyled">
-              <li>
-                01 - S01E01: Pilot{" "}
-                <span className="text-muted">December 2, 2013</span>
-              </li>
-              <li>
-                02 - S01E02: Lawnmower Dog{" "}
-                <span className="text-muted">December 9, 2013</span>
-              </li>
+              {episode.map((epi, index) => (
+                <li key={epi.id}>
+                  {index + 1} - {epi.episode}: {epi.name}{" "}
+                  <span className="text-muted">{epi.air_date}</span>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
